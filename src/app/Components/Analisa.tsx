@@ -2,9 +2,16 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+interface Prediction {
+    Gender: number;
+    Age: number;
+    Course: string;
+    Depression: number;
+}
+
 function MentalHealthPredictions() {
     const [accuracy, setAccuracy] = useState("");
-    const [predictions, setPredictions] = useState([]);
+    const [predictions, setPredictions] = useState<Prediction[]>([]);
 
     const API = 'https://backenddatamining-production.up.railway.app'
 
@@ -50,14 +57,20 @@ function MentalHealthPredictions() {
                         </tr>
                     </thead>
                     <tbody>
-                        {predictions.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.Gender === 0 ? "Female" : "Male"}</td>
-                                <td>{item.Age}</td>
-                                <td>{item.Course}</td>
-                                <td>{item.Depression === 1 ? "Yes" : "No"}</td>
+                        {predictions.length > 0 ? (
+                            predictions.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item?.Gender === 0 ? "Female" : "Male"}</td>
+                                    <td>{item?.Age ?? "N/A"}</td>
+                                    <td>{item?.Course ?? "Unknown"}</td>
+                                    <td>{item?.Depression === 1 ? "Yes" : "No"}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={4} className="text-center">No data available</td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
