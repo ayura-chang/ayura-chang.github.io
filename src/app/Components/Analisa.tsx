@@ -6,7 +6,7 @@ function MentalHealthPredictions() {
     const [accuracy, setAccuracy] = useState("");
     const [predictions, setPredictions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
 
     // Fetch accuracy from backend
     const fetchAccuracy = async () => {
@@ -14,7 +14,9 @@ function MentalHealthPredictions() {
             const response = await axios.get("https://backenddatamining-production.up.railway.app/accuracy");
             setAccuracy(response.data.accuracy);
         } catch (err) {
-            setError("Failed to fetch accuracy: ", err);
+            if (err instanceof Error) {
+                setError(`Failed to fetch accuracy: ${err.message}`);
+            }
         }
     };
 
@@ -24,16 +26,28 @@ function MentalHealthPredictions() {
             const response = await axios.get("https://backenddatamining-production.up.railway.app/predict");
             setPredictions(response.data.predictions);
         } catch (err) {
-            setError("Failed to fetch predictions:", err);
-        } finally {
-            setLoading(false);
+            if (err instanceof Error) {
+                setError(`Failed to fetch predictions: ${err.message}`);
+            }
         }
     };
 
     // Fetch data on component mount
     useEffect(() => {
-        fetchAccuracy();
-        fetchPredictions();
+        const fetchData = async () => {
+            try {
+                await fetchAccuracy();
+                await fetchPredictions();
+            } catch (err) {
+                if (err instanceof Error) {
+                    setError(`Terjai kesalahan saat mengambil data: ${err.message}`);
+                }
+            } finally {
+                setLoading(false); // Pastikan loading berubah jadi false setelah fetch
+            }
+        };
+
+        fetchData();
     }, []);
 
     if (loading) return <p>Loading...</p>;
