@@ -1,9 +1,3 @@
-
-## ⚠️ IMPORTANT! DO NOT DELETE THIS ⚠️
-### Deployment:
-- Custom build commands: `pip install -r requirements.txt`
-- Custom start commands: `uvicorn app:app --host 0.0.0.0 --port 10000`
-
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
